@@ -48,6 +48,6 @@ def get_bus_timings (bus_stop_code, service_no=[]):
             # print(bus["NextBus"]["EstimatedArrival"], bus["NextBus2"]["EstimatedArrival"]) => 2019-11-19T14:22:09+08:00
             bus_1 = get_time_difference(bus["NextBus"]["EstimatedArrival"])
             bus_2 = get_time_difference(bus["NextBus2"]["EstimatedArrival"])
-            bus_timings.append([determine_arr(bus_1), determine_arr(bus_2)])
+            bus_timings.append([bus["ServiceNo"], determine_arr(bus_1), determine_arr(bus_2)])
 
     return bus_timings

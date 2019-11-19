@@ -5,40 +5,95 @@ from kivy.app import App
 from kivy.uix.scrollview import ScrollView
 from kivy.core.window import Window
 
+from bus_api import *
+
+FONT = "DroidSansFallback.ttf"
+
+def wrapper (self):
+    self.bind(
+        width=lambda *x:
+        self.setter("text_size")(self, (self.width, None)),
+        texture_size=lambda *x: self.setter("height")(self, self.texture_size[1]))
+
+class WrappedLabel(Label):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        wrapper(self)
+
+
+class WrappedButton(Button):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        wrapper(self)
+
+
 class BusApp (App):
+
     def build (self):
-        Window.clearcolor = (1,1,1,1)
+        Window.clearcolor = (1, 1, 1, 1)
+        self.prev_button = None
+
+        # Bus locations
+        self.locations = {"Block 713": "84479",
+                          "Block 745": "84471",
+                          "Opp Bedok Central PO 巴刹": "84359",
+                          "Bedok Int 车头": "84009"}
+
         # Main layout
         main_layout = GridLayout(cols=1, size_hint_y=None)
         main_layout.bind(minimum_height=main_layout.setter("height"))
 
-        main_layout.add_widget(Label(text="Bus App"))
+        main_layout.add_widget(Label(text="巴士", font_name=FONT, font_size=25, color=[0,0,0,1],
+                                     size_hint_y=None))
 
-        # Bus locations
-        locations = {"Block 713": "84479",
-                     "Block 745": "84471",
-                     "Opp Bedok Central PO 巴刹": "84359",
-                     "Bedok Int 车头": "84009"}
-
-        for location in locations:
-            location_btn = Button(size_hint=(1,None),
-                                  background_color=(0,0,0,1),
-                                  font_name="DroidSansFallback.ttf")
+        # Location layout
+        for location in self.locations:
+            location_btn = WrappedButton(size_hint=(1,None),
+                                         background_color=(0,0,0,1),
+                                         font_name=FONT)
             location_btn.text = location
-            location_btn.text_size = location_btn.size
-            location_btn.font_size = 20
+            location_btn.font_size = 25
             location_btn.bind(on_release=self.get_timings)
             main_layout.add_widget(location_btn)
 
-        # Scroll view
-        scroll_view = ScrollView(bar_width=10, size_hint=(1,1), size=(Window.width, Window.height))
-        scroll_view.add_widget(main_layout)
+        # Time layout
+        self.time_layout = GridLayout(cols=3, size_hint_y=None)
+        self.time_layout.bind(minimum_height=self.time_layout.setter("height"))
 
-        return scroll_view
+        main_layout.add_widget(self.time_layout)
+
+        # Scroll view
+        self.scroll_view = ScrollView(bar_width=10, size_hint=(1,1), size=(Window.width, Window.height))
+        self.scroll_view.add_widget(main_layout)
+
+        return self.scroll_view
 
 
     def get_timings (self, instance):
-        print(instance.text)
+        # Clear widgets
+        self.time_layout.clear_widgets()
+
+        if self.prev_button:
+            self.prev_button.background_color = [0,0,0,1]
+
+        self.prev_button = instance
+        instance.background_color = [1,0,0,1]
+
+        service_no = ["66", "228"]
+        bus_stop_code = self.locations[instance.text]
+        bus_timings = get_bus_timings(bus_stop_code, service_no)
+        for bus_timing in bus_timings:
+            # Add service number, first bus, second bus
+            for index in range (3):
+                label = WrappedLabel(text=bus_timing[index], color=[0, 0, 0, 1],
+                                     font_name=FONT, font_size=25, size_hint=(1, None))
+                if index == 0:
+                    # Colorize service code
+                    label.color = [1,0,0,1]
+                self.time_layout.add_widget(label)
+
+        self.scroll_view.size = (Window.width, Window.height)
+
 
 if __name__ == "__main__":
     BusApp().run()

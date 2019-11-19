@@ -25,8 +25,12 @@ def get_time_difference (time):
     # print(datetime.now())
 
     # Return time difference
-    # TODO: Validation checking (1. if curr > target, return arr; 2. check hours)
-    return (datetime_object-datetime.now()).seconds//60
+    curr_time = datetime.now()
+    time_difference = (datetime_object-curr_time).seconds//60
+    if curr_time > datetime_object:
+        return 0 # Arr
+
+    return time_difference
 
 
 def determine_arr (time_difference):

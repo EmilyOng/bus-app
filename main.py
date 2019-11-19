@@ -10,15 +10,21 @@ from bus_api import *
 FONT = "DroidSansFallback.ttf"
 
 def wrapper (self):
+    # https://stackoverflow.com/a/43695096
     self.bind(
         width=lambda *x:
         self.setter("text_size")(self, (self.width, None)),
         texture_size=lambda *x: self.setter("height")(self, self.texture_size[1]))
 
+
 class WrappedLabel(Label):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         wrapper(self)
+        self.font_name = FONT
+        self.font_size = 25
+        self.color = [0, 0, 0, 1]
+        self.size_hint_y = None
 
 
 class WrappedButton(Button):
@@ -43,8 +49,8 @@ class BusApp (App):
         main_layout = GridLayout(cols=1, size_hint_y=None)
         main_layout.bind(minimum_height=main_layout.setter("height"))
 
-        main_layout.add_widget(Label(text="巴士", font_name=FONT, font_size=25, color=[0,0,0,1],
-                                     size_hint_y=None))
+        main_layout.add_widget(WrappedLabel(text="巴士",
+                                            halign="center"))
 
         # Location layout
         for location in self.locations:
@@ -63,7 +69,9 @@ class BusApp (App):
         main_layout.add_widget(self.time_layout)
 
         # Scroll view
-        self.scroll_view = ScrollView(bar_width=10, size_hint=(1,1), size=(Window.width, Window.height))
+        self.scroll_view = ScrollView(bar_width=10,
+                                      size_hint=(1,1),
+                                      size=(Window.width, Window.height))
         self.scroll_view.add_widget(main_layout)
 
         return self.scroll_view
@@ -85,8 +93,7 @@ class BusApp (App):
         for bus_timing in bus_timings:
             # Add service number, first bus, second bus
             for index in range (3):
-                label = WrappedLabel(text=bus_timing[index], color=[0, 0, 0, 1],
-                                     font_name=FONT, font_size=25, size_hint=(1, None))
+                label = WrappedLabel(text=bus_timing[index])
                 if index == 0:
                     # Colorize service code
                     label.color = [1,0,0,1]

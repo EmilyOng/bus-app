@@ -19,7 +19,8 @@ def get_time_difference (time):
     time = time.split(":")
     time = [int(x) for x in time]
 
-    datetime_object = datetime(date[0], date[1], date[2], time[0], time[1], time[2])
+    datetime_object = datetime(date[0], date[1], date[2],
+                               time[0], time[1], time[2])
 
     # print(datetime_object)
     # print(datetime.now())
@@ -42,7 +43,9 @@ def determine_arr (time_difference):
 
 def get_bus_timings (bus_stop_code, service_no=[]):
     # Make API call
-    bus_arrival_response = requests.get("http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2", headers=headers, params={"BusStopCode": bus_stop_code}).json()
+    bus_arrival_response = requests.get("http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2",
+                                        headers=headers,
+                                        params={"BusStopCode": bus_stop_code}).json()
 
     # Get services
     bus_arrival_response = bus_arrival_response["Services"]

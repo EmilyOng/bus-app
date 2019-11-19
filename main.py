@@ -56,7 +56,8 @@ class BusApp (App):
         for location in self.locations:
             location_btn = WrappedButton(size_hint=(1,None),
                                          background_color=(0,0,0,1),
-                                         font_name=FONT)
+                                         font_name=FONT,
+                                         halign="center")
             location_btn.text = location
             location_btn.font_size = 25
             location_btn.bind(on_release=self.get_timings)
@@ -97,6 +98,7 @@ class BusApp (App):
                 if index == 0:
                     # Colorize service code
                     label.color = [1,0,0,1]
+                    label.halign = "center"
                 self.time_layout.add_widget(label)
 
         self.scroll_view.size = (Window.width, Window.height)

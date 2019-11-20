@@ -4,9 +4,13 @@ from datetime import datetime
 headers = {"AccountKey": "r6oXJUS9Rb6xqBxG6x3L6A== ",
            "accept": "application/json"}
 
-def get_time_difference (time):
-    # datetime(year, month, day, hour, minute, second, microsecond)
 
+def get_time_difference(time):
+    # datetime(year, month, day, hour, minute, second, microsecond)
+	
+    if len(time) <= 0:
+        return -1  # Invalid
+		
     temp_index = time.find("T")
 
     # Date
@@ -29,19 +33,21 @@ def get_time_difference (time):
     curr_time = datetime.now()
     time_difference = (datetime_object-curr_time).seconds//60
     if curr_time > datetime_object:
-        return 0 # Arr
+        return 0  # Arr
 
     return time_difference
 
 
-def determine_arr (time_difference):
-    if time_difference <= 0:
-        return "要到了" # Arr
+def determine_arr(time_difference):
+    if time_difference == 0:
+        return "要到了"  # Arr
+    elif time_difference == -1:
+        return "-"  # Invalid
     else:
-        return str(time_difference) + " 分钟" # Time + min
+        return str(time_difference) + " 分钟"  # Time + min
 
 
-def get_bus_timings (bus_stop_code, service_no=[]):
+def get_bus_timings(bus_stop_code):
     # Make API call
     bus_arrival_response = requests.get("http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2",
                                         headers=headers,
@@ -51,10 +57,9 @@ def get_bus_timings (bus_stop_code, service_no=[]):
     bus_arrival_response = bus_arrival_response["Services"]
     bus_timings = []
     for bus in bus_arrival_response:
-        if bus["ServiceNo"] in service_no:
-            # print(bus["NextBus"]["EstimatedArrival"], bus["NextBus2"]["EstimatedArrival"]) => 2019-11-19T14:22:09+08:00
-            bus_1 = get_time_difference(bus["NextBus"]["EstimatedArrival"])
-            bus_2 = get_time_difference(bus["NextBus2"]["EstimatedArrival"])
-            bus_timings.append([bus["ServiceNo"], determine_arr(bus_1), determine_arr(bus_2)])
+        bus_1 = get_time_difference(bus["NextBus"]["EstimatedArrival"])
+        bus_2 = get_time_difference(bus["NextBus2"]["EstimatedArrival"])
+        bus_timings.append(
+            [bus["ServiceNo"], determine_arr(bus_1), determine_arr(bus_2)])
 
     return bus_timings

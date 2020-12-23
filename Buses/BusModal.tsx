@@ -87,27 +87,32 @@ const BusModal = (props: {busStopCode: string}) => {
               'Content-Type': 'application/json',
               AccountKey: 'r6oXJUS9Rb6xqBxG6x3L6A==',
             },
-          },
+          }
         )
         .then((response) => {
           if (visible) {
             let busTimings_ = response.data
             busTimings_.Services.map((service: BusStatus) => {
               service.NextBus.EstimatedDuration = formatArrivalDuration(
-                service.NextBus.EstimatedArrival,
+                service.NextBus.EstimatedArrival
               )
               service.NextBus2.EstimatedDuration = formatArrivalDuration(
-                service.NextBus2.EstimatedArrival,
+                service.NextBus2.EstimatedArrival
               )
               service.NextBus3.EstimatedDuration = formatArrivalDuration(
-                service.NextBus3.EstimatedArrival,
+                service.NextBus3.EstimatedArrival
               )
             })
-            const [priorityBuses, remainderBuses] = busTimings_.Services.reduce((result, busService) => {
-              const index = priorityServiceNo.includes(busService.ServiceNo) ? 1 : 0
-              result[index].push(busService)
-              return result
-            }, [[], []])
+            const [priorityBuses, remainderBuses] = busTimings_.Services.reduce(
+              (result: {[x: number]: BusStatus[]}, busService: BusStatus) => {
+                const index = priorityServiceNo.includes(busService.ServiceNo)
+                  ? 1
+                  : 0
+                result[index].push(busService)
+                return result
+              },
+              [[], []]
+            )
             priorityBuses.sort(compareServiceNo)
             remainderBuses.sort(compareServiceNo)
             setBusTimings(remainderBuses.concat(priorityBuses))
@@ -120,7 +125,10 @@ const BusModal = (props: {busStopCode: string}) => {
     }
   }, [visible, busStopCode])
 
-  const renderItem: ({ item, index }: {
+  const renderItem: ({
+    item,
+    index,
+  }: {
     item: BusStatus
     index: number
   }) => JSX.Element = ({item, index}) => (
@@ -148,9 +156,7 @@ const BusModal = (props: {busStopCode: string}) => {
         onPress={() => setVisible(true)}>
         {locations[busStopCode]}
       </Button>
-      <Modal
-        isVisible={visible}
-        onBackdropPress={() => setVisible(false)}>
+      <Modal isVisible={visible} onBackdropPress={() => setVisible(false)}>
         <Card>
           {isLoading ? (
             <Spinner status="danger" />

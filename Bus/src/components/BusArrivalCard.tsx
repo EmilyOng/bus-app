@@ -1,6 +1,7 @@
 import { Card, List, Spinner, StyleService, Text } from "@ui-kitten/components"
 import { useBusArrivalResponse } from "composables/bus"
-import { BusService } from "models/bus"
+import { differenceInMinutes } from "date-fns"
+import { BusLoad, BusService } from "models/bus"
 
 interface BusArrivalCardProps {
     BusStopCode: string
@@ -8,6 +9,14 @@ interface BusArrivalCardProps {
 
 const BusArrivalCard = (props: BusArrivalCardProps) => {
     const { loading, busArrivalResponse } = useBusArrivalResponse(props.BusStopCode)
+
+    const formatArrivalDuration = (arrivalTime: string) => {
+        if (arrivalTime.length === 0) {
+            return '-'
+        }
+        const duration = differenceInMinutes(arrivalTime, Date.now())
+        return duration <= 0 ? '要到了' : `${duration} 分钟`
+    }
 
     const renderItem: ({
         item,
@@ -17,10 +26,11 @@ const BusArrivalCard = (props: BusArrivalCardProps) => {
         index: number
         }) => React.ReactElement = ({item}) => (
         <Card
-            status='success'>
+            status={item.NextBus.Load === BusLoad.SEA ? 'success' : 'warning'}
+        >
             <Text category="h1">{item.ServiceNo}</Text>
-            <Text category="h5">{item.NextBus.EstimatedArrival}</Text>
-            <Text category="h5">{item.NextBus2.EstimatedArrival}</Text>
+            <Text category="h5">{formatArrivalDuration(item.NextBus.EstimatedArrival)}</Text>
+            <Text category="h5">{formatArrivalDuration(item.NextBus2.EstimatedArrival)}</Text>
         </Card>
     )
 

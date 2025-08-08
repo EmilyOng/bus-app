@@ -1,23 +1,23 @@
 export enum BusLoad {
     // Seats available
-    SEA = 1,
+    SEA = "SEA",
     // Standing available
-    SDA = 2,
+    SDA = "SDA",
     // Limited standing
-    LSD = 3
+    LSD = "LSD"
 }
 
 export enum VehicleType {
     // Single deck
-    SD = 1,
+    SD = "SD",
     // Double deck
-    DD = 2,
+    DD = "DD",
     // Bendy
-    BD = 3
+    BD = "BD"
 }
 
 export interface NextBus {
-    EstimatedArrival: Date
+    EstimatedArrival: string
     Load: BusLoad
     Type: VehicleType
 }

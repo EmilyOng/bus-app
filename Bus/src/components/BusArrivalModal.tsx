@@ -11,7 +11,7 @@ const BusArrivalModal = (props: BusArrivalModalProps) => {
     const [visible, setVisible] = useState(false)
 
     return (
-      <Layout style={styles.container} level="1">
+      <>
         <Button
           style={styles.button}
           appearance="outline"
@@ -29,16 +29,13 @@ const BusArrivalModal = (props: BusArrivalModalProps) => {
             <BusArrivalCard BusStopCode={props.BusStop.Code} />
           </Card>
         </Modal>
-      </Layout>
+      </>
     )
 }
 
 const styles = StyleService.create({
   button: {
     margin: 20,
-  },
-  container: {
-    display: 'flex'
   },
   card: {
     alignItems: 'center'

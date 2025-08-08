@@ -8,17 +8,17 @@ const App = () => {
     <ApplicationProvider {...eva} theme={eva.light}>
       <SafeAreaView>
         <View style={styles.navbar}>
-          <Text category="h1" status="control">
+          <Text category='h1'>
             巴士
           </Text>
         </View>
       </SafeAreaView>
     </ApplicationProvider>
-  );
+  )
 }
 
 const styles = StyleService.create({
   navbar: {alignItems: 'center', backgroundColor: '#ffa421'},
-});
+})
 
-export default App;
+export default App

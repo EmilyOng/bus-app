@@ -1,8 +1,0 @@
-.DS_Store
-/node_modules/
-/android/
-/__tests__/
-/__pycache__/
-/.buildozer__/
-/.idea/
-/bin/

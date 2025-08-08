@@ -14,12 +14,12 @@ export class BusAPI {
     private apiKey: string
 
     constructor() {
-        const { API_KEY } = process.env
-        if (!API_KEY) {
-            throw new Error('Expected API_KEY but not set.')
+        const { EXPO_PUBLIC_API_KEY } = process.env
+        if (!EXPO_PUBLIC_API_KEY) {
+            throw new Error('Expected EXPO_PUBLIC_API_KEY but not set.')
         }
 
-        this.apiKey = API_KEY
+        this.apiKey = EXPO_PUBLIC_API_KEY
     }
 
     public async getBusArrival(busArrivalRequest: BusArrivalRequest): Promise<BusArrivalResponse> {

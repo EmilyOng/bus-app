@@ -1,9 +1,10 @@
 import { Button, Card, Layout, Modal, StyleService } from "@ui-kitten/components";
 import { useState } from "react";
 import BusArrivalCard from "./BusArrivalCard";
+import { DisplayBusStop } from "models/bus";
 
 interface BusArrivalModalProps {
-    BusStopCode: string
+    BusStop: DisplayBusStop
 }
 
 const BusArrivalModal = (props: BusArrivalModalProps) => {
@@ -15,8 +16,9 @@ const BusArrivalModal = (props: BusArrivalModalProps) => {
           style={styles.button}
           appearance="outline"
           size="giant"
+          status={props.BusStop.Theme}
           onPress={() => setVisible(true)}>
-          {props.BusStopCode}
+          {props.BusStop.Name}
         </Button>
         <Modal
             visible={visible}
@@ -24,7 +26,7 @@ const BusArrivalModal = (props: BusArrivalModalProps) => {
             backdropStyle={styles.backdrop}
         >
           <Card style={styles.card}>
-            <BusArrivalCard BusStopCode={props.BusStopCode} />
+            <BusArrivalCard BusStopCode={props.BusStop.Code} />
           </Card>
         </Modal>
       </Layout>
@@ -36,8 +38,7 @@ const styles = StyleService.create({
     margin: 20,
   },
   container: {
-    maxHeight: 600,
-    minWidth: 300,
+    display: 'flex'
   },
   card: {
     alignItems: 'center'

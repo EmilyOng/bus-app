@@ -1,6 +1,8 @@
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, StyleService, Text } from '@ui-kitten/components';
 import BusArrivalModal from 'components/BusArrivalModal';
+import { BUS_STOPS } from 'data';
+import { BusStop } from 'models/bus';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -13,7 +15,12 @@ const App = () => {
             巴士
           </Text>
           <ScrollView>
-            <BusArrivalModal BusStopCode='84479' />
+            {BUS_STOPS.map((busStop: BusStop) => {
+                return <BusArrivalModal
+                    key={busStop.BusStopCode}
+                    BusStop={busStop}
+                  />
+            })}
           </ScrollView>
         </View>
       </SafeAreaView>

@@ -28,3 +28,9 @@ export interface BusService {
     NextBus2: NextBus
     NextBus3: NextBus
 }
+
+export interface DisplayBusStop {
+    Code: string
+    Name: string
+    Theme: 'primary' | 'danger' | 'warning' | 'success' | 'info'
+}

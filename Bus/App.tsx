@@ -30,7 +30,7 @@ const styles = StyleService.create({
     display: "flex",
     backgroundColor: "#ffffff",
     marginTop: 20,
-    width: "100%",
+    width: "100%"
   },
   navbar: {
     textAlign: "center",

@@ -19,7 +19,7 @@ const BusArrivalCard = (props: BusArrivalCardProps) => {
     const duration = differenceInMinutes(arrivalTime, Date.now());
     return duration <= 0 ? "要到了" : `${duration} 分钟`;
   };
-
+  
   const renderItem: ({
     item,
     index,
